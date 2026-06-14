@@ -41,20 +41,16 @@ def health():
 
 frontend_dist = os.path.join(os.path.dirname(__file__), "frontend", "dist")
 
-@app.get("/admin/assets/{file_path:path}")
+@app.get("/assets/{file_path:path}")
 def serve_assets(file_path: str):
     asset_path = os.path.join(frontend_dist, "assets", file_path)
     if os.path.exists(asset_path):
         return FileResponse(asset_path)
     raise HTTPException(status_code=404, detail="Asset not found")
 
-@app.get("/admin/{rest_of_path:path}")
+@app.get("/{rest_of_path:path}")
 def serve_frontend(rest_of_path: str):
     index_path = os.path.join(frontend_dist, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
     raise HTTPException(status_code=404, detail="Frontend not built")
-
-@app.get("/")
-def redirect_to_admin():
-    return RedirectResponse(url="/admin/")

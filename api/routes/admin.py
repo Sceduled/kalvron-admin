@@ -187,13 +187,19 @@ async def get_client_daily_stats(client_id: str, db: AsyncSession = Depends(get_
                     
     return sorted(list(daily_stats.values()), key=lambda x: x["date"])
 
+from sqlalchemy.exc import IntegrityError
+
 @router.post("/admin/clients")
 async def register_client(req: ClientRegisterRequest, db: AsyncSession = Depends(get_db), admin_user: str = Depends(get_admin_user)):
-    client = ClientRegistry(client_id=req.client_id, client_name=req.client_name, railway_url=req.railway_url)
-    db.add(client)
-    await db.commit()
-    await db.refresh(client)
-    return client
+    try:
+        client = ClientRegistry(client_id=req.client_id, client_name=req.client_name, railway_url=req.railway_url)
+        db.add(client)
+        await db.commit()
+        await db.refresh(client)
+        return client
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(status_code=400, detail="Client ID already exists")
 
 @router.patch("/admin/clients/{client_id}")
 async def update_client(client_id: str, req: ClientUpdateRequest, db: AsyncSession = Depends(get_db), admin_user: str = Depends(get_admin_user)):
