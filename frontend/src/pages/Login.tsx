@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Lock, User } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export default function Login() {
   const [username, setUsername] = useState('')
@@ -34,15 +35,20 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 px-4">
-      <div className="max-w-md w-full bg-zinc-900/80 backdrop-blur-xl p-8 rounded-2xl border border-zinc-800 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-[#09090b] px-4 font-sans">
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.3 }}
+        className="max-w-md w-full bg-white/[0.02] border border-white/[0.05] rounded-xl backdrop-blur-md overflow-hidden p-8 shadow-2xl"
+      >
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold tracking-tight text-white">Kalvron Admin</h2>
-          <p className="text-zinc-400 mt-2">Sign in to access the dashboard</p>
+          <p className="text-gray-400 mt-2 text-sm">Sign in to access the dashboard</p>
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded-lg text-sm text-center mb-6">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-300 p-3 rounded-lg text-sm text-center mb-6">
             {error}
           </div>
         )}
@@ -50,39 +56,43 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <div className="relative">
-              <User className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+              <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input 
                 type="text" 
                 required
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 placeholder="Username"
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
+                className="w-full bg-white/[0.02] border border-white/[0.05] rounded-lg p-2.5 pl-10 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-white/20 placeholder-gray-600 transition-colors"
               />
             </div>
           </div>
           <div className="space-y-2">
             <div className="relative">
-              <Lock className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+              <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input 
                 type="password" 
                 required
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg py-3 pl-10 pr-4 text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors"
+                className="w-full bg-white/[0.02] border border-white/[0.05] rounded-lg p-2.5 pl-10 text-sm text-gray-300 focus:outline-none focus:ring-1 focus:ring-white/20 placeholder-gray-600 transition-colors"
               />
             </div>
           </div>
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+            className="w-full bg-white text-black font-semibold px-4 py-2.5 rounded-lg hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center min-h-[44px]"
           >
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? (
+              <div className="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)]"></div>
+            ) : (
+              'Sign in'
+            )}
           </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   )
 }
